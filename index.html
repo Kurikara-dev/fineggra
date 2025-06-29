@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finegra 3D BIM Viewer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #1a1a1a;
+      color: #ffffff;
+      overflow: hidden;
+    }
+    
+    #app {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+    
+    #viewer-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    
+    #three-canvas {
+      display: block;
+      outline: none;
+    }
+    
+    .ui-panel {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 8px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .control-panel {
+      top: 20px;
+      left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .property-panel {
+      top: 20px;
+      right: 20px;
+      width: 300px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+    
+    .file-input-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+    
+    .file-input {
+      position: absolute;
+      left: -9999px;
+    }
+    
+    .button {
+      background: #0066cc;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s;
+    }
+    
+    .button:hover {
+      background: #0052a3;
+    }
+    
+    .button:disabled {
+      background: #444;
+      cursor: not-allowed;
+    }
+    
+    .property-item {
+      margin-bottom: 12px;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+    }
+    
+    .property-label {
+      font-weight: bold;
+      color: #88c999;
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+    
+    .property-value {
+      font-size: 14px;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="viewer-container">
+      <canvas id="three-canvas"></canvas>
+    </div>
+    
+    <div class="ui-panel control-panel">
+      <div class="file-input-wrapper">
+        <input type="file" id="ifc-file-input" class="file-input" accept=".ifc" />
+        <label for="ifc-file-input" class="button">IFCファイルを読み込み</label>
+      </div>
+      <button id="reset-camera" class="button">カメラリセット</button>
+      <button id="toggle-wireframe" class="button">ワイヤーフレーム</button>
+      <button id="toggle-lod" class="button">LOD自動切替</button>
+    </div>
+    
+    <div class="ui-panel property-panel" id="property-panel" style="display: none;">
+      <h3 style="margin-bottom: 12px; color: #88c999;">選択オブジェクト情報</h3>
+      <div id="property-content"></div>
+    </div>
+  </div>
+  
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
