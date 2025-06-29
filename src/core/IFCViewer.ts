@@ -106,10 +106,13 @@ export class IFCViewer {
   }
   
   private setupScene(): void {
-    const ambientLight = new AmbientLight(0x404040, 0.6)
+    // Improved lighting for better visibility (Issue #4)
+    // Ambient light: brighter color and higher intensity for better object visibility
+    const ambientLight = new AmbientLight(0x808080, 1.2)
     this.scene.add(ambientLight)
     
-    const directionalLight = new DirectionalLight(0xffffff, 0.8)
+    // Directional light: slightly higher intensity for better definition
+    const directionalLight = new DirectionalLight(0xffffff, 1.0)
     directionalLight.position.set(50, 50, 50)
     directionalLight.castShadow = true
     directionalLight.shadow.mapSize.width = 2048
@@ -150,14 +153,20 @@ export class IFCViewer {
   private async setupIFCLoader(): Promise<void> {
     try {
       console.log('Setting up IFC loader...')
+      
+      // Set WASM path first
       await this.ifcLoader.ifcManager.setWasmPath('/wasm/')
       console.log('WASM path set successfully')
       
-      // Setup BVH for better performance
-      await this.ifcLoader.ifcManager.setupThreeMeshBVH()
-      console.log('ThreeMeshBVH setup complete')
+      // Setup BVH for better performance (before WebIFC init)
+      try {
+        await this.ifcLoader.ifcManager.setupThreeMeshBVH()
+        console.log('ThreeMeshBVH setup complete')
+      } catch (bvhError) {
+        console.warn('ThreeMeshBVH setup failed, continuing without it:', bvhError)
+      }
       
-      // Apply web-ifc configuration
+      // Apply web-ifc configuration (before WebIFC init)
       this.ifcLoader.ifcManager.applyWebIfcConfig({
         COORDINATE_TO_ORIGIN: true,
         USE_FAST_BOOLS: false  // Disable fast bools to avoid potential issues
@@ -334,6 +343,13 @@ export class IFCViewer {
   
   public async loadIFC(file: File): Promise<IFCModel> {
     try {
+      // Ensure WebIFC API is properly initialized before loading
+      if (!this.ifcLoader.ifcManager.ifcAPI.wasmModule) {
+        console.log('WebIFC not yet initialized, initializing now...')
+        await this.ifcLoader.ifcManager.ifcAPI.Init()
+        console.log('WebIFC initialization completed')
+      }
+      
       const url = URL.createObjectURL(file)
       const ifcModel = await this.ifcLoader.loadAsync(url)
       

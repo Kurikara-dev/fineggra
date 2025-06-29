@@ -1,5 +1,5 @@
 {
-  "name": "finegra-3d-viewer",
+  "name": "fineggra-3d-viewer",
   "version": "0.1.0",
   "description": "3D BIM Viewer with IFC.js and Three.js",
   "main": "dist/index.js",
@@ -15,13 +15,13 @@
     "test:ui": "playwright test --ui"
   },
   "dependencies": {
-    "three": "^0.135.0",
-    "web-ifc": "^0.0.39",
-    "web-ifc-three": "^0.0.118"
+    "three": "^0.149.0",
+    "web-ifc": "^0.0.54",
+    "web-ifc-three": "^0.0.124"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",
-    "@types/three": "^0.135.0",
+    "@types/three": "^0.149.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.45.0",
